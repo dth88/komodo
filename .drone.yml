@@ -2,9 +2,13 @@ kind: pipeline
 type: docker
 name: default
 
+platform:
+  arch: arm64
+  os: linux
+
 steps:
 - name: install-dependencies
-  image: arm64v8/ubuntu:latest
+  image: ubuntu:focal
   commands:
   - uname -a
   - apt update
