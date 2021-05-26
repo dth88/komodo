@@ -81,6 +81,20 @@ cd komodo
 #This can take some time.
 ```
 
+#### Notes on aarch64(armv8-a) native compilation for Raspberry
+```
+Fresh installation of https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview
+In Pyimager pick 64bit Ubuntu Server 20.04.2 LTS (RPi 3/4/400) -> Install -> Connect via ssh and:
+
+sudo apt update && sudo apt dist-upgrade -y
+sudo apt-get install build-essential pkg-config libc6-dev m4 autoconf libtool ncurses-dev unzip git python python-zmq zlib1g-dev wget libcurl4-gnutls-dev bsdmainutils automake curl libsodium-dev libboost-dev libdb++-dev -y
+
+BUILD=aarch64-linux-gnu ./zcutil/build.sh -j4
+
+```
+
+
+
 
 #### OSX
 Ensure you have [brew](https://brew.sh) and Command Line Tools installed.
