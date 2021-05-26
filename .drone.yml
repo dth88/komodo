@@ -56,5 +56,3 @@ steps:
     api_key: drone_ci
     files: 
     - armv8.tar.gz
-  when:
-    event: tag
