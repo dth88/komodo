@@ -7,7 +7,7 @@ platform:
   os: linux
 
 steps:
-- name: uname
+- name: uname1
   image: ubuntu:focal
   command:
   - uname -a
@@ -17,7 +17,7 @@ steps:
   command:
   - apt update && apt dist-upgrade -y
 
-- name: uname
+- name: uname2
   image: ubuntu:focal
   command:
   - uname -a
@@ -33,7 +33,7 @@ steps:
   command:
   - ./zcutil/fetch-params-alt.sh
 
-- name: uname
+- name: uname3
   image: ubuntu:focal
   command:
   - uname -a
@@ -50,14 +50,10 @@ steps:
   - file src/komodo-cli
   - tar -zcvf armv8.tar.gz src/komodod src/komodo-cli
 
----
-kind: pipeline
-name: release
-
 - name: publish
   image: plugins/github-release
   settings:
-    api_key: drone_ci
+    api_key: 'echo "${ATOK_FOR_DRONE_CI}"'
     files: 
     - armv8.tar.gz
     checksum:
@@ -65,5 +61,4 @@ name: release
   when:
     status:
     - success
-    
-depends_on: default
+  depends_on: default
