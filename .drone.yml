@@ -53,7 +53,7 @@ steps:
 - name: publish
   image: plugins/github-release
   environment:
-  - TOKEN: ${DRONE_ACCESS}
+  - 'TOKEN: ${DRONE_ACCESS}'
   settings:
     api_key: $TOKEN
     files: 
