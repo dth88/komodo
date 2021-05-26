@@ -1,88 +1,26 @@
 kind: pipeline
 type: docker
-name: linux-amd64
-
-platform:
-  arch: amd64
-  os: linux
-
-steps:
-- name: publish
-  image: plugins/docker
-  settings:
-    repo: alinbalutoiu/argocd
-    tags: linux-amd64-${DRONE_BRANCH}
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-
----
-kind: pipeline
-type: docker
-name: linux-arm64
+name: linux-armv8
 
 platform:
   arch: arm64
   os: linux
 
 steps:
-- name: publish
-  image: plugins/docker
-  settings:
-    repo: alinbalutoiu/argocd
-    tags: linux-arm64-${DRONE_BRANCH}
-    build_args:
-      - BUILD_ALL_CLIS="false"
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
+- name: install-dependencies
+  image: arm64v8/ubuntu
+  commands:
+  - uname -a
+  - sudo apt update && sudo apt dist-upgrade -y
+  - sudo apt install build-essential pkg-config libc6-dev m4 autoconf libtool libncurses-dev unzip git zlib1g-dev wget libcurl4-gnutls-dev bsdmainutils automake curl libsodium-dev libboost-dev libdb++-dev -y
 
----
-kind: pipeline
-type: docker
-name: linux-arm
+- name: zcash-fetch-params
+  image: arm64v8/ubuntu
+  commands:
+  - ./zcutil/fetch-params-alt.sh
 
-platform:
-  arch: arm
-  os: linux
 
-steps:
-- name: publish
-  image: plugins/docker
-  settings:
-    repo: alinbalutoiu/argocd
-    tags: linux-arm-${DRONE_BRANCH}
-    build_args:
-      - BUILD_ALL_CLIS="false"
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-
----
-kind: pipeline
-type: docker
-name: manifest
-
-steps:
-- name: publish
-  image: plugins/manifest
-  settings:
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    target: alinbalutoiu/argocd:${DRONE_BRANCH}
-    template: alinbalutoiu/argocd:OS-ARCH-${DRONE_BRANCH}
-    platforms:
-      - linux/amd64
-      - linux/arm
-      - linux/arm64
-
-depends_on:
-- linux-arm64
-- linux-arm
-- linux-amd64
-
+- name: build
+  image: arm64v8/ubuntu
+  commands:
+  - BUILD=aarch64-linux-gnu ./zcutil/build.sh -j4
