@@ -50,9 +50,20 @@ steps:
   - file src/komodo-cli
   - tar -zcvf armv8.tar.gz src/komodod src/komodo-cli
 
+---
+kind: pipeline
+name: release
+
 - name: publish
   image: plugins/github-release
   settings:
     api_key: drone_ci
     files: 
     - armv8.tar.gz
+    checksum:
+    - md5
+  when:
+    status:
+    - success
+    
+depends_on: default
