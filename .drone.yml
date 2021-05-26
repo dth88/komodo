@@ -58,6 +58,3 @@ steps:
     - armv8.tar.gz
     checksum:
     - md5
-  when:
-    status:
-    - success
