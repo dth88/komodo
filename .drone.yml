@@ -52,8 +52,10 @@ steps:
 
 - name: publish
   image: plugins/github-release
+  environment:
+  - TOKEN: ${DRONE_ACCESS}
   settings:
-    api_key: 'echo "$ATOK_FOR_DRONE_CI"'
+    api_key: $TOKEN
     files: 
     - armv8.tar.gz
     checksum:
