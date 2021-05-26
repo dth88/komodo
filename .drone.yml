@@ -1,5 +1,39 @@
 kind: pipeline
 type: docker
+name: linux-arm
+
+platform:
+  arch: arm
+  os: linux
+
+steps:
+- name: build
+  image: plugins/docker
+  settings:
+    dry_run: true
+    dockerfile: Dockerfile
+    build_args:
+      - BUILD_ALL_CLIS="false"
+---
+kind: pipeline
+type: docker
+name: linux-arm64
+
+platform:
+  arch: arm64
+  os: linux
+
+steps:
+- name: build
+  image: plugins/docker
+  settings:
+    dry_run: true
+    dockerfile: Dockerfile
+    build_args:
+      - BUILD_ALL_CLIS="false"
+---
+kind: pipeline
+type: docker
 name: linux-armv8
 
 platform:
@@ -16,3 +50,4 @@ steps:
   - apt install build-essential pkg-config libc6-dev m4 autoconf libtool libncurses-dev unzip git zlib1g-dev wget libcurl4-gnutls-dev bsdmainutils automake curl libsodium-dev libboost-dev libdb++-dev -y
   - ./zcutil/fetch-params-alt.sh
   - BUILD=aarch64-linux-gnu ./zcutil/build.sh -j4
+---
