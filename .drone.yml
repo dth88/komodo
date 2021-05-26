@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: default
+name: armv8
 
 platform:
   arch: arm64
@@ -43,12 +43,16 @@ steps:
   command:
   - BUILD=aarch64-linux-gnu ./zcutil/build.sh -j4
 
-- name: check-binaries
+- name: check-and-tar-binaries
   image: ubuntu:focal
   commands:
   - file src/komodod
   - file src/komodo-cli
   - tar -zcvf armv8.tar.gz src/komodod src/komodo-cli
+
+---
+kind: pipeline
+name: default
 
 - name: publish
   image: plugins/github-release
