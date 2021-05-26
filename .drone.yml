@@ -4,7 +4,7 @@ name: default
 
 steps:
 - name: install-dependencies
-  image: arm64v8/ubuntu:focal
+  image: arm64v8/ubuntu:latest
   commands:
   - uname -a
   - apt update
