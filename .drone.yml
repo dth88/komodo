@@ -8,19 +8,19 @@ platform:
 
 steps:
 - name: install-dependencies
-  image: arm64v8/ubuntu:latest
+  image: arm64v8/ubuntu
   commands:
   - uname -a
   - pwd
   - apt install build-essential pkg-config libc6-dev m4 autoconf libtool libncurses-dev unzip git zlib1g-dev wget libcurl4-gnutls-dev bsdmainutils automake curl libsodium-dev libboost-dev libdb++-dev -y
 
 - name: zcash-fetch-params
-  image: arm64v8/ubuntu:latest
+  image: arm64v8/ubuntu
   commands:
   - ./zcutil/fetch-params-alt.sh
 
 
 - name: build
-  image: arm64v8/ubuntu:latest
+  image: arm64v8/ubuntu
   commands:
   - BUILD=aarch64-linux-gnu ./zcutil/build.sh -j4
