@@ -52,11 +52,10 @@ steps:
 
 - name: publish
   image: plugins/github-release
-  environment:
-  - 'TOKEN: ${DRONE_ACCESS}'
   settings:
-    api_key: $TOKEN
+    api_key: $DRONE_ACCESS
     files: 
     - armv8.tar.gz
     checksum:
     - md5
+    
