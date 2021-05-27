@@ -1,61 +1,17 @@
 kind: pipeline
 type: docker
 name: default
-
 platform:
   arch: arm64
   os: linux
-
 steps:
-- name: uname1
-  image: ubuntu:focal
-  command:
-  - uname -a
-
-- name: apt-update
-  image: ubuntu:focal
-  command:
-  - apt update && apt dist-upgrade -y
-
-- name: uname2
-  image: ubuntu:focal
-  command:
-  - uname -a
-
 - name: install-dependencies
   image: ubuntu:focal
   commands:
   - echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  - apt update && apt dist-upgrade -y
   - apt install build-essential pkg-config libc6-dev m4 autoconf libtool libncurses-dev unzip git zlib1g-dev wget libcurl4-gnutls-dev bsdmainutils automake curl libsodium-dev libboost-dev libdb++-dev -y -q
-
-- name: fetch-params
-  image: ubuntu:focal
-  command:
   - ./zcutil/fetch-params-alt.sh
-
-- name: uname3
-  image: ubuntu:focal
-  command:
-  - uname -a
-
-- name: build
-  image: ubuntu:focal
-  command:
   - BUILD=aarch64-linux-gnu ./zcutil/build.sh -j4
-
-- name: check-and-tar-binaries
-  image: ubuntu:focal
-  commands:
   - file src/komodod
   - file src/komodo-cli
-  - tar -zcvf armv8.tar.gz src/komodod src/komodo-cli
-
-- name: publish
-  image: plugins/github-release
-  settings:
-    api_key: $DRONE_ACCESS
-    files: 
-    - armv8.tar.gz
-    checksum:
-    - md5
-    
