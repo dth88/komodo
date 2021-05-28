@@ -30,5 +30,8 @@ steps:
     - armv8.tar.gz
 
 trigger:
-  branch:
-  - aarch64-native-build
+  event:
+  - tag
+  instance:
+    include:
+    - default
