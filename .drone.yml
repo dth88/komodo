@@ -19,6 +19,7 @@ steps:
 ---
 kind: pipeline
 name: default
+type: docker
 
 - name: publish
   image: plugins/github-release
