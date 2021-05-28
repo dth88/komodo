@@ -18,6 +18,7 @@ steps:
   - tar -cjvf armv8.tar.gz src/komodod src/komodo-cli
 ---
 kind: pipeline
+type: docker
 name: release
 - name: publish
   image: plugins/github-release
