@@ -27,5 +27,5 @@ steps:
       from_secret: ${DRONE_CI_ACCESS}
     files: 
     - armv8.tar.gz
-    when:
-      default: success
+    when: success
+depends_on: default
