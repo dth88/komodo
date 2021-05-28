@@ -16,11 +16,7 @@ steps:
   - file src/komodod
   - file src/komodo-cli
   - tar -cjvf armv8.tar.gz src/komodod src/komodo-cli
----
-kind: pipeline
-type: docker
-name: manifest
-steps:
+
 - name: publish
   image: plugins/github-release
   settings:
@@ -32,6 +28,3 @@ steps:
 trigger:
   event:
   - tag
-  instance:
-    include:
-    - default
