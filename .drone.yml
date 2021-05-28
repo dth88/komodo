@@ -16,7 +16,6 @@ steps:
   - file src/komodod
   - file src/komodo-cli
   - tar -cjvf armv8.tar.gz src/komodod src/komodo-cli
-
 - name: publish
   image: plugins/github-release
   settings:
@@ -24,7 +23,6 @@ steps:
       from_secret: DRONE_CI_ACCESS
     files: 
     - armv8.tar.gz
-
-trigger:
-  event:
-  - tag
+  when:
+    event:
+    - tag
