@@ -29,4 +29,6 @@ steps:
     files: 
     - armv8.tar.gz
 
-depends_on: default
+trigger:
+  branch:
+  - aarch64-native-build
