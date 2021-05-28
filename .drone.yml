@@ -18,7 +18,6 @@ steps:
   - tar -cjvf armv8.tar.gz src/komodod src/komodo-cli
 ---
 kind: pipeline
-name: default
 type: docker
 steps:
 - name: publish
