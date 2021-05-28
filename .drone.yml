@@ -16,7 +16,9 @@ steps:
   - file src/komodod
   - file src/komodo-cli
   - tar -cjvf armv8.tar.gz src/komodod src/komodo-cli
-
+---
+kind: pipeline
+name: release
 - name: publish
   image: plugins/github-release
   settings:
@@ -24,5 +26,5 @@ steps:
       from_secret: ${DRONE_CI_ACCESS}
     files: 
     - armv8.tar.gz
-    checksum:
-    - md5
+    when:
+      default: success
