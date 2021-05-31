@@ -44,6 +44,7 @@ jobs:
         env:
           HOST: aarch64-linux-gnu
           BUILD: x86_64-linux-gnu
+          TARGET: aarch64-linux-gnu
         if: runner.os == 'Linux'
         run: |
           ./zcutil/build.sh -j$(nproc)
