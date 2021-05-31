@@ -17,12 +17,9 @@ jobs:
   armv8-build:
     name: armv8 Build
     runs-on: ubuntu-20.04
-
     steps:
       - uses: actions/checkout@v2
-
       - name: Install deps (Linux)
-
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
@@ -30,6 +27,7 @@ jobs:
           sudo apt-get remove php* msodbcsql17 mysql* powershell dotn*
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get upgrade -y
+          ./zcutil/fetch-params.sh
           sudo apt-get install -q \
                   build-essential \
                   pkg-config \
