@@ -49,9 +49,12 @@ jobs:
           curl https://sh.rustup.rs -sSf | sh -s -- -y
           source $HOME/.cargo/env
           rustup target add aarch64-unknown-linux-gnu
+          sudo update-alternatives --set aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc
+          sudo update-alternatives --set aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++
+
       - name: Build (Linux-cross-armv8)
         run: |
-          ./zcutil/build-aarch64.sh -j$(nproc)
+          sudo bash zcutil/build-aarch64.sh -j$(nproc)
           zip --junk-paths komodo-armv8 src/komodod src/komodo-cli src/komodo-tx
       - name: Upload komodo-armv8.zip as artifact
         uses: actions/upload-artifact@v1
