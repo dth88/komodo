@@ -24,4 +24,5 @@ steps:
      - armv8.tar.gz
   when:
     event:
-    - tag v0.7.0-armv8
+    - tag v0.7.0-native-armvi8
+    - push
