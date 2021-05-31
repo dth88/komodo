@@ -18,7 +18,7 @@ echo $PWD
 cd $WD
 
 ./autogen.sh
-CONFIG_SITE=$PWD/depends/aarch64-linux-gnu/share/config.site CXXFLAGS="-DCURL_STATICLIB -DCURVE_ALT_BN128 -fopenmp -pthread" ./configure --prefix="${PREFIX}" --host=aarch64-linux-gnu --enable-static --disable-shared
+CONFIG_SITE=$PWD/depends/aarch64-linux-gnu/share/config.site CXXFLAGS="-DPTW32_STATIC_LIB -DCURL_STATICLIB -DCURVE_ALT_BN128 -fopenmp -pthread" ./configure --prefix="${PREFIX}" --host=aarch64-linux-gnu --enable-static --disable-shared
 sed -i 's/-lboost_system-mt /-lboost_system-mt-s /' configure
 cd src/
 CC="${CC} -g " CXX="${CXX} -g " make V=1  komodod komodo-cli

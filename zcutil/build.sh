@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+export HOST=aarch64-linux-gnu
+CXX=aarch64-linux-gnu-g++
+CC=aarch64-linux-gnu-gcc
 
 set -eu -o pipefail
 
@@ -21,7 +24,7 @@ cd "$(dirname "$("$READLINK" -f "$0")")/.."
 # Allow user overrides to $MAKE. Typical usage for users who need it:
 #   MAKE=gmake ./zcutil/build.sh -j$(nproc)
 if [[ -z "${MAKE-}" ]]; then
-    MAKE=cmake
+    MAKE=make
 fi
 
 # Allow overrides to $BUILD and $HOST for porters. Most users will not need it.
@@ -111,5 +114,8 @@ echo $PWD
 
 
 cd $WD
-
-"$MAKE" "$@" V=1
+./autogen.sh
+CONFIG_SITE=$PWD/depends/aarch64-linux-gnu/share/config.site CXXFLAGS="-DCURL_STATICLIB -DCURVE_ALT_BN128 -fopenmp -pthread" ./configure --prefix="${PREFIX}" --host=x86_64-linux-gnu --target=aarch64-linux-gnu --enable-static --disable-shared
+sed -i 's/-lboost_system-mt /-lboost_system-mt-s /' configure
+cd src/
+CC="${CC} -g " CXX="${CXX} -g " make V=1 NO_GTEST=1 STATIC=1  komodod komodo-cli

@@ -31,6 +31,7 @@ define $(package)_preprocess_cmds
 endef
 
 define $(package)_build_cmds
+  rustup target add aarch64-unknown-linux-gnu && \
   $(host_prefix)/native/bin/cargo build --package librustzcash $($(package)_build_opts)
 endef
 
