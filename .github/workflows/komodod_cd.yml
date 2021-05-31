@@ -9,10 +9,56 @@ on:
     - beta
     - dev
     - research
+    - aarch64-native-build
 
 
 jobs:
+  
+  armv8-build:
+    name: armv8 Build
+    runs-on: ubuntu-20.04
 
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install deps (Linux)
+
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt-get update  # prevents repo404 errors on apt-remove below
+          sudo apt-get remove php* msodbcsql17 mysql* powershell dotn*
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get upgrade -y
+          sudo apt-get install -q \
+                  build-essential \
+                  pkg-config \
+                  linux-libc-dev-arm64-cross \
+                  m4 autoconf \
+                  g++-aarch64-linux-gnu \
+                  binutils-aarch64-linux-gnu \
+                  libtool \
+                  ncurses-dev \
+                  unzip \
+                  git \
+                  zlib1g-dev \
+                  wget \
+                  bsdmainutils \
+                  automake \
+                  curl
+      - name: Build (Linux-cross-armv8)
+        if: runner.os == 'Linux'
+        run: |
+          ./zcutil/build.sh -j$(nproc)
+          zip --junk-paths komodo-linux src/komodod src/komodo-cli
+      - name: Upload komodo-linux.zip as artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: komodo-linux
+          path: ./komodo-linux.zip
+  
+  
+  
   linux-build:
     name: Linux Build
     # using there as old release as possible with GHA worker to provide better compatibility
