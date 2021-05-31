@@ -2,8 +2,7 @@ package=rust
 $(package)_version=1.32.0
 $(package)_download_path=https://static.rust-lang.org/dist
 
-$(package)_file_name_linux=rust-$($(package)_version)-x86_64-unknown-linux-gnu.tar.gz
-$(package)_sha256_hash_linux=e024698320d76b74daf0e6e71be3681a1e7923122e3ebd03673fcac3ecc23810
+
 $(package)_file_name_linux=rust-$($(package)_version)-aarch64-unknown-linux-gnu.tar.gz
 $(package)_sha256_hash_linux=60def40961728212da4b3a9767d5a2ddb748400e150a5f8a6d5aa0e1b8ba1cee
 $(package)_file_name_darwin=rust-$($(package)_version)-x86_64-apple-darwin.tar.gz
@@ -45,6 +44,31 @@ endef
 define $(package)_stage_cmds
   ./install.sh --destdir=$($(package)_staging_dir) --prefix=$(host_prefix)/native --disable-ldconfig && \
   cp -r ../mingw32/rust-std-x86_64-pc-windows-gnu/lib/rustlib/x86_64-pc-windows-gnu $($(package)_staging_dir)$(host_prefix)/native/lib/rustlib
+endef
+
+else ifeq ($(host_os),linux)
+$(package)_build_subdir=buildos
+$(package)_extra_sources = $($(package)_file_name_$(build_os))
+
+define $(package)_fetch_cmds
+$(call fetch_file,$(package),$($(package)_download_path),$($(package)_download_file),$($(package)_file_name),$($(package)_sha256_hash)) && \
+$(call fetch_file,$(package),$($(package)_download_path),$($(package)_file_name_$(build_os)),$($(package)_file_name_$(build_os)),$($(package)_sha256_hash_$(build_os)))
+endef
+
+define $(package)_extract_cmds
+  mkdir -p $($(package)_extract_dir) && \
+  echo "$($(package)_sha256_hash)  $($(package)_source)" > $($(package)_extract_dir)/.$($(package)_file_name).hash && \
+  echo "$($(package)_sha256_hash_$(build_os))  $($(package)_source_dir)/$($(package)_file_name_$(build_os))" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
+  $(build_SHA256SUM) -c $($(package)_extract_dir)/.$($(package)_file_name).hash && \
+  mkdir aarch64-linux-gnu && \
+  tar --strip-components=1 -xf $($(package)_source) -C aarch64-linux-gnu && \
+  mkdir buildos && \
+  tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_file_name_$(build_os)) -C buildos
+endef
+
+define $(package)_stage_cmds
+  ./install.sh --destdir=$($(package)_staging_dir) --prefix=$(host_prefix)/native --disable-ldconfig && \
+  cp -r ../aarch64-linux-gnu/rust-std-aarch64-unknown-linux-gnu/lib/rustlib/aarch64-unknown-linux-gnu $($(package)_staging_dir)$(host_prefix)/native/lib/rustlib
 endef
 
 else
