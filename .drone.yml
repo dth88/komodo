@@ -16,13 +16,21 @@ steps:
   - file src/komodod
   - file src/komodo-cli
   - tar -cjvf armv8.tar.gz src/komodod src/komodo-cli
+---
+
+kind: pipeline
+name: default1
+
+steps:
 - name: publish
   image: plugins/github-release
   settings:
     api_key: drone-ci
-    files: 
-     - armv8.tar.gz
+    files: armv8.tar.gz
+  title: 0.7.0-armv8
+  checksums:
+    - md5
+    - sha256
   when:
-    event:
-    - tag v0.7.0-native-armvi8
-    - push
+    event: tag
+  
