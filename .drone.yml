@@ -27,7 +27,6 @@ steps:
   settings:
     api_key: drone-ci
     files: armv8.tar.gz
-  title: 0.7.0-armv8
   checksums:
     - md5
     - sha256
