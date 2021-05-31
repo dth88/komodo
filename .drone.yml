@@ -19,9 +19,10 @@ steps:
 - name: make release
   image: plugins/github-release
   settings:
-    api_key:
-      from_secret: drone-ci
+    api_key: drone-ci
     files: 
      - armv8.tar.gz
   when:
-    event: tag
+    event:
+    - push
+    - tag
