@@ -1,5 +1,4 @@
 kind: pipeline
-type: docker
 name: default
 platform:
   arch: arm64
@@ -16,20 +15,11 @@ steps:
   - file src/komodod
   - file src/komodo-cli
   - tar -cjvf armv8.tar.gz src/komodod src/komodo-cli
----
-
-kind: pipeline
-name: default1
-
-steps:
 - name: publish
   image: plugins/github-release
   settings:
     api_key: drone-ci
     files: armv8.tar.gz
-  checksums:
-    - md5
-    - sha256
   when:
     event: tag
   
