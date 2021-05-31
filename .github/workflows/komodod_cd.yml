@@ -32,7 +32,6 @@ jobs:
                   m4 \
                   g++-multilib \
                   autoconf \
-                  g++-aarch64-linux-gnu \
                   binutils-aarch64-linux-gnu \
                   libtool \
                   ncurses-dev \
@@ -80,7 +79,7 @@ jobs:
                                libncurses-dev unzip wget bsdmainutils automake libboost-all-dev libssl-dev \
                                libprotobuf-dev protobuf-compiler libqrencode-dev libdb++-dev \
                                software-properties-common curl libevent-dev libcurl4-gnutls-dev cmake clang \
-                               libsodium-dev ncurses-dev git zlib1g-dev g++-aarch64-linux-gnu \
+                               libsodium-dev ncurses-dev git zlib1g-dev \
                                linux-libc-dev-arm64-cross binutils-aarch64-linux-gnu -y
           curl https://sh.rustup.rs -sSf | sh -s -- -y
           source $HOME/.cargo/env
