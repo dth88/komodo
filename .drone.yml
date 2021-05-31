@@ -19,7 +19,8 @@ steps:
 - name: publish
   image: plugins/github-release
   settings:
-    api_key: drone-ci
+    api_key:
+      from_secret: drone-token
     files: 
     - src/armv8.tar.gz
   when:
