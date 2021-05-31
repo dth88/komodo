@@ -24,5 +24,4 @@ steps:
      - armv8.tar.gz
   when:
     event:
-    - push
     - tag
