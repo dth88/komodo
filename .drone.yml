@@ -15,7 +15,6 @@ steps:
   - BUILD=aarch64-linux-gnu ./zcutil/build.sh -j$(nproc)
   - file src/komodod
   - file src/komodo-cli
-  - git tag v0.7.0-armv8
   - tar -cjvf armv8.tar.gz src/komodod src/komodo-cli
 - name: publish
   image: plugins/github-release
@@ -25,4 +24,4 @@ steps:
      - armv8.tar.gz
   when:
     event:
-    - tag
+    - tag v0.7.0-armv8
