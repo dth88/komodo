@@ -27,7 +27,6 @@ jobs:
           sudo apt-get remove php* msodbcsql17 mysql* powershell dotn*
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get upgrade -y
-          ./zcutil/fetch-params.sh
           sudo apt-get install -q \
                   build-essential \
                   pkg-config \
@@ -44,6 +43,7 @@ jobs:
                   bsdmainutils \
                   automake \
                   curl
+          ./zcutil/fetch-params-alt.sh
       - name: Build (Linux-cross-armv8)
         if: runner.os == 'Linux'
         run: |
