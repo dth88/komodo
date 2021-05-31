@@ -7,6 +7,14 @@ $(package)_sha256_hash=9909ec59fa7a411c2071d6237b3363a0bc6e5e42358505cf64b7da0f5
 $(package)_git_commit=06da3b9ac8f278e5d4ae13088cf0a4c03d2c13f5
 $(package)_dependencies=rust $(rust_crates)
 $(package)_patches=cargo.config 0001-Start-using-cargo-clippy-for-CI.patch remove-dev-dependencies.diff
+$(package)_rust_target=aarch64-unknown-linux-gnu
+
+define $(package)_set_vars
+$(package)_build_opts=--frozen --release
+ifneq ($(canonical_host),$(build))
+$(package)_build_opts+=--target=aarch64-unknown-linux-gnu
+endif
+endef
 
 ifeq ($(host_os),mingw32)
 $(package)_library_file=target/x86_64-pc-windows-gnu/release/rustzcash.lib
@@ -16,12 +24,6 @@ else
 $(package)_library_file=target/release/librustzcash.a
 endif
 
-define $(package)_set_vars
-$(package)_build_opts=--frozen --release
-ifneq ($(canonical_host),$(build))
-$(package)_build_opts+=--target=aarch64-unknown-linux-gnu
-endif
-endef
 
 define $(package)_preprocess_cmds
   patch -p1 -d pairing < $($(package)_patch_dir)/0001-Start-using-cargo-clippy-for-CI.patch && \
