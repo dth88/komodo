@@ -28,11 +28,11 @@ jobs:
                   build-essential \
                   pkg-config \
                   libc6-dev \
-                  linux-libc-dev-arm64-cross \
                   m4 \
-                  g++-multilib \
                   autoconf \
+                  linux-libc-dev-arm64-cross \
                   binutils-aarch64-linux-gnu \
+                  g++-aarch64-linux-gnu \
                   libtool \
                   ncurses-dev \
                   unzip \
