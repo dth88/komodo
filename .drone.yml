@@ -20,7 +20,7 @@ steps:
   image: plugins/github-release
   settings:
     api_key:
-      from_secret: DRONE_CI_ACCESS
+      from_secret: drone-ci
     files: 
      - armv8.tar.gz
   when:
