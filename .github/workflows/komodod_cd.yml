@@ -13,7 +13,7 @@ jobs:
   
   armv8-build:
     name: armv8 Build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-20.04.02
     steps:
       - uses: actions/checkout@v2
       - name: Install deps (Linux)
@@ -27,8 +27,11 @@ jobs:
           sudo apt-get install -q \
                   build-essential \
                   pkg-config \
+                  libc6-dev \
                   linux-libc-dev-arm64-cross \
-                  m4 autoconf \
+                  m4 \
+                  g++-multilib \
+                  autoconf \
                   g++-aarch64-linux-gnu \
                   binutils-aarch64-linux-gnu \
                   libtool \
@@ -39,7 +42,11 @@ jobs:
                   wget \
                   bsdmainutils \
                   automake \
-                  curl
+                  curl \
+                  libcurl4-gnutls-dev \
+                  cmake \
+                  libsodium-dev \
+                  libevent-dev
       - name: Build (Linux-cross-armv8)
         env:
           HOST: aarch64-linux-gnu
@@ -54,3 +61,41 @@ jobs:
         with:
           name: komodo-armv8
           path: ./komodo-armv8.zip
+
+
+  armv8a-cross:
+    name: armv8a-cross
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install deps
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt-get update  # prevents repo404 errors on apt-remove below
+          sudo apt-get remove php* msodbcsql17 mysql* powershell containernetworking-* containers* dotn*
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install build-essential pkg-config libc6-dev m4 g++-multilib autoconf libtool \
+                               libncurses-dev unzip wget bsdmainutils automake libboost-all-dev libssl-dev \
+                               libprotobuf-dev protobuf-compiler libqrencode-dev libdb++-dev \
+                               software-properties-common curl libevent-dev libcurl4-gnutls-dev cmake clang \
+                               libsodium-dev ncurses-dev git zlib1g-dev g++-aarch64-linux-gnu \
+                               linux-libc-dev-arm64-cross binutils-aarch64-linux-gnu -y
+          curl https://sh.rustup.rs -sSf | sh -s -- -y
+          source $HOME/.cargo/env
+          rustup target add aarch64-unknown-linux-gnu
+          sudo update-alternatives --set aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc
+          sudo update-alternatives --set aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++
+      - name: Build (armv8-cross)
+        env:
+          HOST: aarch64-linux-gnu
+        run: |
+          ./zcutil/build.sh -j$(nproc)
+          zip --junk-paths komodo-armv8a src/komodod src/komodo-cli.exe
+      - name: Upload komodo-armv8a.zip as artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: komodo-armv8a
+          path: ./komodo-armv8a.zip
