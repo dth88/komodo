@@ -19,7 +19,7 @@ steps:
   image: plugins/github-release
   settings:     
     api_key: 
-      from_secret: DRONE_API_KEY
+      from_secret: github-api-key
     files: 
     - armv8.tar.gz
   when:
