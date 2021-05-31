@@ -14,12 +14,14 @@ steps:
   - BUILD=aarch64-linux-gnu ./zcutil/build.sh -j$(nproc)
   - file src/komodod
   - file src/komodo-cli
-  - tar -cjvf armv8.tar.gz src/komodod src/komodo-cli
+  - 
+  - tar -cjvf src/armv8.tar.gz src/komodod src/komodo-cli
 - name: publish
   image: plugins/github-release
   settings:
     api_key: drone-ci
-    files: armv8.tar.gz
+    files: 
+    - src/armv8.tar.gz
   when:
     event: tag
   
