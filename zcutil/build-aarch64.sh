@@ -1,5 +1,6 @@
 #!/bin/bash
 export HOST=aarch64-linux-gnu
+export BUILD=x86_64-linux-gnu
 CXX=aarch64-linux-gnu-g++
 CC=aarch64-linux-gnu-gcc
 PREFIX="$(pwd)/depends/$HOST"
@@ -18,7 +19,6 @@ echo $PWD
 cd $WD
 
 ./autogen.sh
-CONFIG_SITE=$PWD/depends/aarch64-linux-gnu/share/config.site CXXFLAGS="-DCURL_STATICLIB -DCURVE_ALT_BN128 -fopenmp -pthread" ./configure --prefix="${PREFIX}" --host=aarch64-linux-gnu --enable-static --disable-shared
-sed -i 's/-lboost_system-mt /-lboost_system-mt-s /' configure
+CONFIG_SITE=$PWD/depends/aarch64-linux-gnu/share/config.site CXXFLAGS="-DCURL_STATICLIB -DCURVE_ALT_BN128 -fopenmp -pthread" ./configure --prefix="${PREFIX}" --build="${BUILD}" --host="${BUILD}" --target="${HOST}" --disable-shared --enable-static
 cd src/
-CC="${CC} -g " CXX="${CXX} -g " make V=1 STATIC=1  komodod komodo-cli 
+CC="${CC} -g " CXX="${CXX} -g " make V=1 STATIC=1 
