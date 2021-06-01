@@ -46,14 +46,6 @@ then
     shift
 fi
 
-# If --enable-proton is the next argument, enable building Proton code:
-PROTON_ARG='--enable-proton=no'
-if [ "x${1:-}" = 'x--enable-proton' ]
-then
-    PROTON_ARG=''
-    shift
-fi
-
 
 eval "$MAKE" --version
 as --version
