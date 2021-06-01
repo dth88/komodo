@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-export HOST=aarch64-linux-gnu
-CXX=aarch64-linux-gnu-g++
-CC=aarch64-linux-gnu-gcc
 
 set -eu -o pipefail
 

@@ -1,16 +1,17 @@
 SHELL		= /bin/sh
-CC		= aarch64-linux-gnu-gcc
+CC_LINUX		= aarch64-linux-gnu-gcc
 CC_DARWIN	= aarch64-linux-gnu-g++
 CC_WIN		= x86_64-w64-mingw32-gcc-posix
 CFLAGS_DARWIN	= -DBUILD_CUSTOMCC -std=c++11 -arch x86_64 -I../secp256k1/include -I../../depends/$(shell echo `../..//depends/config.guess`/include) -I../univalue/include -I../cryptoconditions/include -I../cryptoconditions/src -I../cryptoconditions/src/asn -I.. -I. -fPIC -Wl,-undefined -Wl,dynamic_lookup -Wno-write-strings --disable-shared --enable-static 
 CFLAGS		= -Wno-write-strings -DBUILD_CUSTOMCC -std=c++11 -I../secp256k1/include -I../../depends/$(shell echo `../..//depends/config.guess`/include) -I../univalue/include -I../cryptoconditions/include -I../cryptoconditions/src -I../cryptoconditions/src/asn -I.. -I. -fPIC --disable-shared --enable-static 
+CFLAGS_LINUX		= -Wno-write-strings -DBUILD_CUSTOMCC -std=c++11 -I../secp256k1/include -I../../depends/$(shell echo `../..//depends/config.guess`/include) -I../univalue/include -I../cryptoconditions/include -I../cryptoconditions/src -I../cryptoconditions/src/asn -I.. -I. -fPIC --disable-shared --enable-static
 CFLAGS_WIN	= -Wno-write-strings -DBUILD_CUSTOMCC -std=c++11 -I../secp256k1/include -I../../depends/x86_64-w64-mingw32/include -I../univalue/include -I../cryptoconditions/include -I../cryptoconditions/src -I../cryptoconditions/src/asn -I.. -I. -fPIC -shared
 DEBUGFLAGS	= -O0 -D _DEBUG
 RELEASEFLAGS	= -O2 -D NDEBUG -combine -fwhole-program
 $(info $(OS))
 OS := $(shell uname -s)
 $(info $(OS))
-TARGET  = customcc.so
+TARGET_LINUX  = customcc.so
 TARGET_DARWIN = customcc.dylib
 TARGET_WIN = customcc.dll
 SOURCES = cclib.cpp
@@ -30,7 +31,7 @@ else ifeq ($(HOST),x86_64-w64-mingw32)
 #else ifeq ($(WIN_HOST),True) - todo: pass ENV var from build.sh if WIN host
 else
 	$(info LINUX)
-	$(CC) $(CFLAGS) $(DEBUGFLAGS) -o $(TARGET) -c $(SOURCES)
+	$(CC_LINUX) $(CFLAGS_LINUX) $(RELEASEFLAGS) -o $(TARGET_LINUX) -c $(SOURCES)
 	cp $(TARGET) ../libcc.so
 endif
 
