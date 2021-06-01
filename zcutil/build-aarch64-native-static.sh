@@ -54,7 +54,7 @@ ld -v
 HOST="$HOST" BUILD="$BUILD" NO_PROTON="$PROTON_ARG" "$MAKE" "$@" -C ./depends/ V=1
 ./autogen.sh
 
-CONFIG_SITE="$PWD/depends/$HOST/share/config.site" CXXFLAGS="-DCURL_STATICLIB -DCURVE_ALT_BN128 -fopenmp -pthread"  ./configure --build="${BUILD}" --host="${HOST}" --disable-shared --enable-static 
+CONFIG_SITE="$PWD/depends/$HOST/share/config.site" CXXFLAGS="-DCURL_STATICLIB -DCURVE_ALT_BN128 -fopenmp -pthread"  ./configure --build="${BUILD}" --host="${HOST}" --disable-shared --enable-static-pie
 
 #BUILD CCLIB
 
@@ -67,4 +67,4 @@ echo $PWD
 
 cd $WD
 
-"$MAKE" "$@" V=1 STATIC=1
+"$MAKE" "$@" V=1
