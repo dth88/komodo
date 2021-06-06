@@ -317,8 +317,11 @@ libbitcoin_server_a_SOURCES = \
   crosschain.cpp \
   crosschain_authority.cpp \
   crypto/haraka.c \
+  crypto/haraka.h \
   crypto/haraka_portable.c \
+  crypto/haraka_portable.h \
   crypto/verus_hash.cpp \
+  crypto/verus_hash.h \
   deprecation.cpp \
   httprpc.cpp \
   httpserver.cpp \
@@ -476,7 +479,9 @@ libbitcoin_common_a_SOURCES = \
   core_read.cpp \
   core_write.cpp \
   crypto/haraka.c \
+  crypto/haraka.h \
   crypto/haraka_portable.c \
+  crypto/haraka_portable.h \
   crypto/verus_hash.cpp \
   crypto/verus_hash.h \
   hash.cpp \
