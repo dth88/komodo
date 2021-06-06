@@ -33,6 +33,7 @@ jobs:
                  libc6-dev \
                  m4 \
                  libsodium-dev \
+                 libboost-dev \
                  libdb++-dev \
                  g++-multilib \
                  autoconf \
@@ -56,7 +57,6 @@ jobs:
       - name: Build (Linux)
         env:
           CONFIGURE_FLAGS: --with-gcc-arch=x86-64
-          BUILD: x86_64-linux-gnu
         run: |
           ./zcutil/build.sh -j$(nproc)
           zip --junk-paths komodo-linux src/komodod src/komodo-cli
