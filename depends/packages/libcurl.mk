@@ -18,7 +18,7 @@ endif
 
 ifeq ($(build_os),linux)
 define $(package)_set_vars
-  $(package)_config_env=LD_LIBRARY_PATH="$(host_prefix)/lib" PKG_CONFIG_LIBDIR="$(host_prefix)/lib/pkgconfig" CPPFLAGS="-I$(host_prefix)/include" LDFLAGS="-L$(host_prefix)/lib"
+  $(package)_config_env=LD_LIBRARY_PATH="$(host_prefix)/lib" PKG_CONFIG_LIBDIR="$(host_prefix)/lib/pkgconfig" CPPFLAGS="-I$(host_prefix)/include -fPIC" LDFLAGS="-L$(host_prefix)/lib"
 endef
 endif
 
