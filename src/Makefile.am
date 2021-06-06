@@ -316,9 +316,8 @@ libbitcoin_server_a_SOURCES = \
   fs.cpp \
   crosschain.cpp \
   crosschain_authority.cpp \
-  crypto/haraka.h \
-  crypto/haraka_portable.h \
-  crypto/verus_hash.h \
+  crypto/haraka.c \
+  crypto/haraka_portable.c \
   crypto/verus_hash.cpp \
   deprecation.cpp \
   httprpc.cpp \
@@ -476,10 +475,10 @@ libbitcoin_common_a_SOURCES = \
   consensus/upgrades.cpp \
   core_read.cpp \
   core_write.cpp \
-  crypto/haraka.h \
-  crypto/haraka_portable.h \
-  crypto/verus_hash.h \
+  crypto/haraka.c \
+  crypto/haraka_portable.c \
   crypto/verus_hash.cpp \
+  crypto/verus_hash.h \
   hash.cpp \
   importcoin.cpp \
   key.cpp \
