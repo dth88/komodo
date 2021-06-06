@@ -5,6 +5,18 @@ Plain C implementation of the Haraka256 and Haraka512 permutations.
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef __linux__ 
+
+#ifdef __i386__ || __X86_64__
+#include <x86intrin.h>
+#elif defined(__arm__)  || defined(__aarch64__)
+#include "crypto/SSE2NEON.h"
+#endif 
+
+#elif _WIN32
+#pragma warning (disable : 4146)
+#include <intrin.h>
+#endif
 #include "haraka_portable.h"
 
 #define HARAKAS_RATE 32

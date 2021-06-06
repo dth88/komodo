@@ -12,6 +12,20 @@ bit output.
 #include "crypto/common.h"
 #include "crypto/verus_hash.h"
 
+#ifdef _WIN32
+#pragma warning (disable : 4146)
+#include <intrin.h>
+#endif // !WIN32
+#endif
+int __cpuverusoptimized = 0x80;
+
+#if defined(__arm__)  || defined(__aarch64__)
+#include "crypto/SSE2NEON.h"
+#else
+#include <x86intrin.h>
+#endif
+
+
 void (*CVerusHash::haraka512Function)(unsigned char *out, const unsigned char *in);
 
 void CVerusHash::Hash(void *result, const void *data, size_t _len)

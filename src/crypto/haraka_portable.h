@@ -1,6 +1,14 @@
 #ifndef SPX_HARAKA_H
 #define SPX_HARAKA_H
 
+
+#if defined(__arm__) || defined(__aarch64__)
+#include "crypto/SSE2NEON.h"
+#else
+#include "immintrin.h"
+#endif
+
+
 /* load constants */
 void load_constants_port();
 
