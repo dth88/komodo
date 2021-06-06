@@ -9,6 +9,7 @@ on:
     - beta
     - dev
     - research
+    - armv8-pie
 
 
 jobs:
@@ -70,6 +71,51 @@ jobs:
         uses: actions-hub/docker@master
         with:
           args: push komodoofficial/komodo:cd_release_${{ steps.shortify_commit.outputs.sha_short }}_${{ steps.extract_branch.outputs.branch }}
+
+linux-armv8-cross:
+    name: Linux armv8
+    # using there as old release as possible with GHA worker to provide better compatibility
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install deps (Linux)
+        run: |
+          sudo apt-get update  # prevents repo404 errors on apt-remove below
+          sudo apt-get remove php* msodbcsql17 mysql* powershell dotn*
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get upgrade -y
+          sudo apt-get install -q \
+            build-essential \
+            pkg-config \
+            linux-libc-dev-arm64-cross \
+            m4 \
+            autoconf \
+            g++-aarch64-linux-gnu \
+            binutils-aarch64-linux-gnu \
+            libtool \
+            ncurses-dev \
+            unzip \
+            zip \
+            git \
+            zlib1g-dev \
+            wget \
+            bsdmainutils \
+            automake \
+            curl -y
+             
+      - name: Build (ARM64)
+        if: runner.os == 'Linux'
+        run: |
+          HOST=aarch64-linux-gnu ./zcutil/build.sh -j$(nproc)
+          zip --junk-paths komodo-linux src/komodod src/komodo-cli
+      - name: Upload komodo-linux.zip as artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: komodo-linux
+          path: ./komodo-linux.zip
+
 
   osx-build:
     name: OSX Build
