@@ -1,5 +1,5 @@
 SHELL		= /bin/sh
-CC		= gcc
+CC		= x86_64-linux-gnu-gcc
 CC_AARCH64      = aarch64-linux-gnu-gcc
 CC_DARWIN	= g++-8
 CC_WIN		= x86_64-w64-mingw32-gcc-posix

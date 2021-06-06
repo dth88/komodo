@@ -55,7 +55,7 @@ void CVerusHash::init()
     }
     else
     {
-        haraka512Function = &haraka512_port_zero;
+        haraka512Function = &haraka512_zero;
     }
 }
 
@@ -107,8 +107,8 @@ void CVerusHashV2::init()
     else
     {
         // load and tweak the haraka constants
-        load_constants_port();
-        haraka512Function = &haraka512_port;
+        //load_constants_port();
+        haraka512Function = &haraka512;
     }
 }
 
