@@ -6,13 +6,13 @@ platform:
   os: linux
 steps:
 - name: install-dependencies
-  image: ubuntu:focal
+  image: ubuntu:xenial
   commands:
   - echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
   - apt update && apt dist-upgrade -y
   - apt install build-essential pkg-config libc6-dev m4 autoconf libtool libncurses-dev unzip git zlib1g-dev wget libcurl4-gnutls-dev bsdmainutils automake curl libsodium-dev libboost-dev libdb++-dev -y -q
   - ./zcutil/fetch-params-alt.sh
-  - BUILD=aarch64-linux-gnu ./zcutil/build.sh -j4
+  - ./zcutil/build.sh -j4
   - file src/komodod
   - file src/komodo-cli
   - tar -cjvf armv8.tar.gz src/komodod src/komodo-cli
