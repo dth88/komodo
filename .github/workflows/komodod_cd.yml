@@ -72,7 +72,7 @@ jobs:
         with:
           args: push komodoofficial/komodo:cd_release_${{ steps.shortify_commit.outputs.sha_short }}_${{ steps.extract_branch.outputs.branch }}
 
-linux-armv8-cross:
+  linux-armv8-cross:
     name: Linux armv8
     # using there as old release as possible with GHA worker to provide better compatibility
     runs-on: ubuntu-16.04
@@ -115,7 +115,6 @@ linux-armv8-cross:
         with:
           name: komodo-linux
           path: ./komodo-linux.zip
-
 
   osx-build:
     name: OSX Build
