@@ -9,7 +9,7 @@ on:
     - beta
     - dev
     - research
-
+    - aarch64-cross
 
 jobs:
 
@@ -18,17 +18,6 @@ jobs:
     # using there as old release as possible with GHA worker to provide better compatibility
     runs-on: ubuntu-16.04
     steps:
-
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
-      - name: Shortify commit sha
-        shell: bash
-        run: echo "##[set-output name=sha_short;]$(echo ${GITHUB_SHA::7})"
-        id: shortify_commit
-
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -39,6 +28,21 @@ jobs:
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get upgrade -y
           sudo apt-get install -q \
+                 build-essential \
+                 pkg-config \
+                 libc6-dev \
+                 m4 \
+                 g++-multilib \
+                 autoconf \
+                 libtool \
+                 libncurses-dev \
+                 unzip \
+                 zip \
+                 git \
+                 zlib1g-dev \
+                 wget \
+                 bsdmainutils \
+                 automake \
                  curl \
                  python3 \
                  python3-dev \
@@ -46,8 +50,59 @@ jobs:
                  python3-pip \
                  libcurl4-openssl-dev \
                  libssl-dev -y
+
       - name: Build (Linux)
-        if: runner.os == 'Linux'
+        env:
+          CONFIGURE_FLAGS: --with-gcc-arch=x86-64
+        run: |
+          ./zcutil/build.sh -j$(nproc)
+          zip --junk-paths komodo-linux src/komodod src/komodo-cli
+      - name: Upload komodo-linux.zip as artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: komodo-linux
+          path: ./komodo-linux.zip
+  linux-aarch64-cross:
+    name: Linux ARM64 cross
+    # using there as old release as possible with GHA worker to provide better compatibility
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install deps (Linux)
+        run: |
+          sudo apt-get update  # prevents repo404 errors on apt-remove below
+          sudo apt-get remove php* msodbcsql17 mysql* powershell dotn*
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get upgrade -y
+          sudo apt-get install -q \
+            build-essential \
+            pkg-config \
+            libc6-dev \
+            m4 \
+            autoconf \
+            libtool \
+            libncurses-dev \
+            zip \
+            unzip \
+            git \
+            zlib1g-dev \
+            wget \
+            linux-libc-dev-arm64-cross \
+            g++-aarch64-linux-gnu \
+            binutils-aarch64-linux-gnu \
+            libcurl4-gnutls-dev \
+            bsdmainutils \
+            automake \
+            curl \
+            libsodium-dev \
+            libboost-dev \
+            libdb++-dev -y
+
+      - name: Build (ARM64-cross)
+        env:
+          HOST: aarch64-linux-gnu
         run: |
           ./zcutil/build.sh -j$(nproc)
           zip --junk-paths komodo-linux src/komodod src/komodo-cli
@@ -57,20 +112,6 @@ jobs:
           name: komodo-linux
           path: ./komodo-linux.zip
           
-      - name: Login to docker hub
-        uses: actions-hub/docker/login@master
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build container
-        run: docker build -f Dockerfile.release -t komodoofficial/komodo:cd_release_${{ steps.shortify_commit.outputs.sha_short }}_${{ steps.extract_branch.outputs.branch }} .
-
-      - name: Push to docker hub
-        uses: actions-hub/docker@master
-        with:
-          args: push komodoofficial/komodo:cd_release_${{ steps.shortify_commit.outputs.sha_short }}_${{ steps.extract_branch.outputs.branch }}
-
   osx-build:
     name: OSX Build
     runs-on: macos-latest
@@ -90,8 +131,10 @@ jobs:
           brew install python3
           brew install gmp
       - name: Build (macOS)
+        env:
+          CONFIGURE_FLAGS: --with-gcc-arch=x86-64
         run: |
-          ./zcutil/build-mac.sh -j4
+          ./zcutil/build-mac.sh -j$(nproc)
           zip --junk-paths komodo-osx src/komodod src/komodo-cli
       - name: Upload komodo-osx.zip as artifact
         uses: actions/upload-artifact@v1
@@ -124,6 +167,8 @@ jobs:
           sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
           sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
       - name: Build (Windows)
+        env:
+          CONFIGURE_FLAGS: --with-gcc-arch=x86-64
         run: |
           ./zcutil/build-win.sh -j$(nproc)
           zip --junk-paths komodo-win src/komodod.exe src/komodo-cli.exe
@@ -136,7 +181,7 @@ jobs:
   publish-release:
       name: Publishing CD releases
       runs-on: ubuntu-latest
-      needs: [linux-build, osx-build, windows-build]
+      needs: [linux-build, osx-build, windows-build, linux-aarch64-cross]
       steps:
         - name: Download komodo-linux.zip
           uses: actions/download-artifact@v1
