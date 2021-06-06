@@ -48,7 +48,8 @@ jobs:
                  libcurl4-openssl-dev \
                  libssl-dev -y
       - name: Build (Linux)
-        if: runner.os == 'Linux'
+        env:
+          CONFIGURE_FLAGS: --with-gcc-arch=x86-64
         run: |
           ./zcutil/build.sh -j$(nproc)
           zip --junk-paths komodo-linux src/komodod src/komodo-cli
@@ -57,20 +58,6 @@ jobs:
         with:
           name: komodo-linux
           path: ./komodo-linux.zip
-          
-      - name: Login to docker hub
-        uses: actions-hub/docker/login@master
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build container
-        run: docker build -f Dockerfile.release -t komodoofficial/komodo:cd_release_${{ steps.shortify_commit.outputs.sha_short }}_${{ steps.extract_branch.outputs.branch }} .
-
-      - name: Push to docker hub
-        uses: actions-hub/docker@master
-        with:
-          args: push komodoofficial/komodo:cd_release_${{ steps.shortify_commit.outputs.sha_short }}_${{ steps.extract_branch.outputs.branch }}
 
   linux-aarch64-cross:
     name: Linux aarch64-cross 
@@ -123,6 +110,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install deps (macOS)
+        env:
+          CONFIGURE_FLAGS: --with-gcc-arch=x86-64
         run: |
           brew update
           brew upgrade
@@ -170,6 +159,8 @@ jobs:
           sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
           sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
       - name: Build (Windows)
+        env:
+          CONFIGURE_FLAGS: --with-gcc-arch=x86-64
         run: |
           ./zcutil/build-win.sh -j$(nproc)
           zip --junk-paths komodo-win src/komodod.exe src/komodo-cli.exe
