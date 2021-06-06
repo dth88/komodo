@@ -12,6 +12,9 @@ steps:
   - apt update && apt dist-upgrade -y
   - apt install build-essential pkg-config libc6-dev m4 autoconf libtool libncurses-dev unzip git zlib1g-dev wget libcurl4-gnutls-dev bsdmainutils automake curl libsodium-dev libboost-dev libdb++-dev -y -q
   - ./zcutil/fetch-params-alt.sh
+  - curl https://sh.rustup.rs -sSf | sh -s -- -y
+  - source $HOME/.cargo/env
+  - rustup target add aarch64-unknown-linux-gnu
   - BUILD=aarch64-linux-gnu ./zcutil/build.sh -j$(nproc)
   - file src/komodod
   - file src/komodo-cli
