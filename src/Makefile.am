@@ -94,13 +94,13 @@ $(LIBCRYPTOCONDITIONS): $(wildcard cryptoconditions/src/*) $(wildcard cryptocond
 # But to build the less dependent modules first, we manually select their order here:
 EXTRA_LIBRARIES += \
   $(LIBBITCOIN_CRYPTO) \
-  $(LIBVERUS_CRYPTO) \
   $(LIBVERUS_PORTABLE_CRYPTO) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_CLI) \
   libzcash.a
+
 if ENABLE_WALLET
 BITCOIN_INCLUDES += $(BDB_CPPFLAGS)
 EXTRA_LIBRARIES += $(LIBBITCOIN_WALLET)
@@ -454,11 +454,11 @@ crypto_libverus_portable_crypto_a_SOURCES = \
   crypto/haraka_portable.c
 else
 # Verus hash specific library - optimized
-crypto_libverus_crypto_a_CPPFLAGS = -O3 -Wint-conversion -march=x86-64 -msse4 -msse4.1 -msse4.2 -mssse3 -mavx -maes -g -funroll-loops -fomit-frame-pointer -fPIC $(AM_CPPFLAGS)
-crypto_libverus_crypto_a_CXXFLAGS = -O3 -Wint-conversion -march=x86-64 -msse4 -msse4.1 -msse4.2 -mssse3 -mavx -maes -g -funroll-loops -fomit-frame-pointer -fPIC $(AM_CXXFLAGS)
-crypto_libverus_crypto_a_SOURCES = \
-  crypto/haraka.h \
-  crypto/haraka.c
+crypto_libverus_portable_crypto_a_CPPFLAGS = -O3 -Wint-conversion -march=$(PLATFORM_VARIANT) -g -funroll-loops -fomit-frame-pointer -fPIC $(AM_CPPFLAGS)
+crypto_libverus_portable_crypto_a_CXXFLAGS = -O3 -Wint-conversion -march=$(PLATFORM_VARIANT) -g -funroll-loops -fomit-frame-pointer -fPIC $(AM_CXXFLAGS)
+crypto_libverus_portable_crypto_a_SOURCES = \
+  crypto/haraka_portable.h \
+  crypto/haraka_portable.c
 endif
 
 
@@ -569,7 +569,6 @@ komodod_LDADD = \
   $(LIBBITCOIN_ZMQ) \
   $(LIBBITCOIN_PROTON) \
   $(LIBBITCOIN_CRYPTO) \
-  $(LIBVERUS_CRYPTO) \
   $(LIBVERUS_PORTABLE_CRYPTO) \
   $(LIBZCASH) \
   $(LIBSNARK) \
@@ -592,7 +591,6 @@ komodod_LDADD += \
   $(ZMQ_LIBS) \
   $(PROTON_LIBS) \
   $(LIBBITCOIN_CRYPTO) \
-  $(LIBVERUS_CRYPTO) \
   $(LIBVERUS_PORTABLE_CRYPTO) \
   $(LIBZCASH_LIBS)
 
@@ -646,7 +644,6 @@ komodo_cli_LDADD = \
 	$(EVENT_LIBS) \
 	$(LIBZCASH) \
 	$(LIBBITCOIN_CRYPTO) \
-  $(LIBVERUS_CRYPTO) \
   $(LIBVERUS_PORTABLE_CRYPTO) \
 	$(LIBZCASH_LIBS)
 
@@ -655,7 +652,6 @@ wallet_utility_LDADD = \
 	libbitcoin_wallet.a \
 	$(LIBBITCOIN_COMMON) \
 	$(LIBBITCOIN_CRYPTO) \
-  $(LIBVERUS_CRYPTO) \
   $(LIBVERUS_PORTABLE_CRYPTO) \
 	$(LIBSECP256K1) \
 	$(LIBBITCOIN_UTIL) \
@@ -687,7 +683,6 @@ komodo_tx_LDADD = \
   $(LIBZCASH) \
   $(LIBSNARK) \
   $(LIBBITCOIN_CRYPTO) \
-  $(LIBVERUS_CRYPTO) \
   $(LIBVERUS_PORTABLE_CRYPTO) \
   $(LIBZCASH_LIBS) \
   $(LIBCRYPTOCONDITIONS)
